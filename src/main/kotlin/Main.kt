@@ -84,3 +84,37 @@ fun setDate(): String {
 
     return "$date $due"
 }
+
+fun setTime(date: String): String {
+    var time = ""
+    var getTime = true
+    while (getTime) {
+        getTime = false
+        println("Input the time (hh:mm):")
+        val timeInput = readln().split(":")
+        if (timeInput.size == 2) {
+            try {
+                val d = date.split("-")
+                val t = LocalDateTime(
+                    d[0].toInt(),
+                    d[1].toInt(),
+                    d[2].toInt(),
+                    timeInput[0].toInt(),
+                    timeInput[1].toInt()
+                ).toString().split("T")
+                time = t[1]
+            } catch (e: IllegalArgumentException) {
+                println("The input time is invalid")
+                getTime = true
+            } catch (e: RuntimeException) {
+                println("The input time is invalid")
+                getTime = true
+            }
+        } else {
+            println("The input time is invalid")
+            getTime = true
+        }
+    }
+
+    return time
+}
