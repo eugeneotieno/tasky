@@ -1,3 +1,5 @@
+import kotlinx.datetime.*
+
 data class Task(var date: String, var time: String, var priority: String, var due: String, var tasks: String)
 
 val taskList = mutableListOf<Task>()
@@ -48,4 +50,37 @@ fun setPriority(): String {
     }
 
     return priority
+}
+
+fun setDate(): String {
+    var date = ""
+    var due = ""
+    var getDate = true
+    while (getDate) {
+        getDate = false
+        println("Input the date (yyyy-mm-dd):")
+        val dateInput = readln().split("-")
+        if (dateInput.size == 3) {
+            try {
+                val d = LocalDate(dateInput[0].toInt(), dateInput[1].toInt(), dateInput[2].toInt())
+                val currentDate = Clock.System.now().toLocalDateTime(TimeZone.of("UTC+0")).date
+                val numberOfDays = currentDate.daysUntil(d)
+                due = if (numberOfDays == 0) "T"
+                else if (numberOfDays > 0) "I"
+                else "O"
+                date = d.toString()
+            } catch (e: IllegalArgumentException) {
+                println("The input date is invalid")
+                getDate = true
+            } catch (e: RuntimeException) {
+                println("The input date is invalid")
+                getDate = true
+            }
+        } else {
+            println("The input date is invalid")
+            getDate = true
+        }
+    }
+
+    return "$date $due"
 }
