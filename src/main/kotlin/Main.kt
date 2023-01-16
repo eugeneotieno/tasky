@@ -118,3 +118,22 @@ fun setTime(date: String): String {
 
     return time
 }
+
+fun setTask(): String {
+    var content = ""
+    println("Input a new task (enter a blank line to end):")
+    var inputList = true
+    while (inputList) {
+        val taskInput = readln().trim()
+        if (taskInput.isBlank()) {
+            inputList = false
+        } else {
+            if (content.isBlank())  content = taskInput
+            else {
+                content += "\n$taskInput"
+            }
+        }
+    }
+
+    return content
+}
