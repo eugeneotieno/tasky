@@ -26,3 +26,26 @@ fun showList() {
         }
     }
 }
+
+fun setPriority(): String {
+    var priority = ""
+    var getPriority = true
+    while (getPriority) {
+        getPriority = false
+        println("Input the task priority (C, H, N, L):")
+        val inputP = readln()
+        if (inputP.lowercase() == "c") {
+            priority = inputP.uppercase()
+        } else if (inputP.lowercase() == "h") {
+            priority = inputP.uppercase()
+        } else if (inputP.lowercase() == "n") {
+            priority = inputP.uppercase()
+        } else if (inputP.lowercase() == "l") {
+            priority = inputP.uppercase()
+        } else {
+            getPriority = true
+        }
+    }
+
+    return priority
+}
