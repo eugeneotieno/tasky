@@ -5,6 +5,125 @@ data class Task(var date: String, var time: String, var priority: String, var du
 val taskList = mutableListOf<Task>()
 
 fun main() {
+    var end = false
+    do {
+        println("Input an action (add, print, edit, delete, end):")
+        when(readln().lowercase()) {
+            "add" -> {
+                val priority = setPriority()
+                val d = setDate().split(" ")
+                val date = d[0]
+                val due = d[1]
+                val time = setTime(date)
+                val content = setTask()
+                if (content.isBlank()) {
+                    println("The task is blank")
+                } else {
+                    taskList.add(Task(date, time, priority, due, content))
+                }
+            }
+            "print" -> {
+                if (taskList.isEmpty()) {
+                    println("No tasks have been input")
+                } else {
+                    showList()
+                }
+            }
+            "edit" -> {
+                if (taskList.isEmpty()) {
+                    println("No tasks have been input")
+                } else {
+                    showList()
+                    var getTaskNum = true
+                    while (getTaskNum) {
+                        getTaskNum = false
+                        println("Input the task number (1-${taskList.size}):")
+                        val n = readln()
+                        try {
+                            val num = n.toInt()
+                            if (num >= 1 && num <= taskList.size) {
+                                var getAction = true
+                                while (getAction) {
+                                    getAction = false
+                                    println("Input a field to edit (priority, date, time, task):")
+                                    when(readln()) {
+                                        "priority" -> {
+                                            val priority = setPriority()
+                                            taskList[num - 1].priority = priority
+                                            println("The task is changed")
+                                        }
+                                        "date" -> {
+                                            val d = setDate().split(" ")
+                                            val date = d[0]
+                                            val due = d[1]
+                                            taskList[num - 1].date = date
+                                            taskList[num - 1].due = due
+                                            println("The task is changed")
+                                        }
+                                        "time" -> {
+                                            val time = setTime(taskList[num - 1].date)
+                                            taskList[num - 1].time = time
+                                            println("The task is changed")
+                                        }
+                                        "task" -> {
+                                            val content = setTask()
+                                            if (content.isBlank()) {
+                                                println("The task is blank")
+                                            } else {
+                                                taskList[num - 1].tasks = content
+                                                println("The task is changed")
+                                            }
+                                        }
+                                        else -> {
+                                            getAction = true
+                                            println("Invalid field")
+                                        }
+                                    }
+                                }
+                            } else {
+                                println("Invalid task number")
+                                getTaskNum = true
+                            }
+                        } catch (e: NumberFormatException) {
+                            println("Invalid task number")
+                            getTaskNum = true
+                        }
+                    }
+                }
+            }
+            "delete" -> {
+                if (taskList.isEmpty()) {
+                    println("No tasks have been input")
+                } else {
+                    showList()
+                    var getTaskNum = true
+                    while (getTaskNum) {
+                        getTaskNum = false
+                        println("Input the task number (1-${taskList.size}):")
+                        val n = readln()
+                        try {
+                            val num = n.toInt()
+                            if (num >= 1 && num <= taskList.size) {
+                                taskList.removeAt(num - 1)
+                                println("The task is deleted")
+                            } else {
+                                println("Invalid task number")
+                                getTaskNum = true
+                            }
+                        } catch (e: NumberFormatException) {
+                            println("Invalid task number")
+                            getTaskNum = true
+                        }
+                    }
+                }
+            }
+            "end" -> {
+                println("Tasklist exiting!")
+                end = true
+            }
+            else -> println("The input action is invalid")
+        }
+    } while (!end)
 }
 
 fun showList() {
