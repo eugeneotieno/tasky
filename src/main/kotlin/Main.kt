@@ -1,10 +1,26 @@
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.datetime.*
+import java.io.File
 
 data class Task(var date: String, var time: String, var priority: String, var due: String, var tasks: String)
 
-val taskList = mutableListOf<Task>()
+var taskList = mutableListOf<Task>()
 
 fun main() {
+
+    val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+    val listType = Types.newParameterizedType(List::class.java, Task::class.java)
+    val adapter: JsonAdapter<List<Task>> = moshi.adapter(listType)
+
+    val jsonFile = File("tasklist.json")
+    if (jsonFile.exists()) {
+        val tasks = jsonFile.bufferedReader().use { it.readLine() }
+        taskList = adapter.fromJson(tasks) as MutableList<Task>
+    }
+
     var end = false
     do {
         println("Input an action (add, print, edit, delete, end):")
@@ -118,6 +134,12 @@ fun main() {
                 }
             }
             "end" -> {
+                if (taskList.isNotEmpty()) {
+                    val type = Types.newParameterizedType(List::class.java, Task::class.java)
+                    val taskListAdapter = moshi.adapter<List<Task?>>(type)
+                    jsonFile.writeText(taskListAdapter.toJson(taskList))
+                }
+
                 println("Tasklist exiting!")
                 end = true
             }
