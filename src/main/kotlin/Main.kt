@@ -127,24 +127,61 @@ fun main() {
 }
 
 fun showList() {
+    println("+----+------------+-------+---+---+--------------------------------------------+")
+    println("| N  |    Date    | Time  | P | D |                   Task                     |")
+    println("+----+------------+-------+---+---+--------------------------------------------+")
     for (i in taskList.indices) {
         val task = taskList[i]
         val num = i + 1
-        if (num <= 9) {
-            println("$num  ${task.date} ${task.time} ${task.priority} ${task.due}")
-            val str = task.tasks.split("\n")
-            for (s in str) {
-                println("   $s")
-            }
-            println()
-        } else {
-            println("$num ${task.date} ${task.time} ${task.priority} ${task.due}")
-            val str = task.tasks.split("\n")
-            for (s in str) {
-                println("   $s")
-            }
-            println()
+        val p: String = when (task.priority) {
+            "C" -> "\u001B[101m \u001B[0m"
+            "N" -> "\u001B[102m \u001B[0m"
+            "H" -> "\u001B[103m \u001B[0m"
+            else -> "\u001B[104m \u001B[0m"
         }
+
+        val d: String = when (task.due) {
+            "O" -> "\u001B[101m \u001B[0m"
+            "I" -> "\u001B[102m \u001B[0m"
+            else -> "\u001B[103m \u001B[0m"
+        }
+
+        if (num <= 9)  print("| $num  |")
+        else print("| $num |")
+
+        print(" ${task.date} |")
+
+        print(" ${task.time} |")
+
+        print(" $p |")
+
+        print(" $d |")
+
+        val tasks = task.tasks.split("\n")
+        for (j in tasks.indices) {
+            val chunk = tasks[j].chunked(44)
+            for (k in chunk.indices) {
+                if (k == 0 && j == 0) {
+                    val rem = 44 - chunk[k].length
+                    print(chunk[k])
+                    repeat(rem) {
+                        print(" ")
+                    }
+                    print("|")
+                } else {
+                    println()
+                    val rem = 44 - chunk[k].length
+                    print("|    |            |       |   |   |${chunk[k]}")
+                    repeat(rem) {
+                        print(" ")
+                    }
+                    print("|")
+                }
+            }
+        }
+
+        println()
+        println("+----+------------+-------+---+---+--------------------------------------------+")
     }
 }
 
